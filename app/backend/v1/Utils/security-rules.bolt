@@ -1,0 +1,388 @@
+/*
+  ---------------------
+  Databse Path to Users
+  ---------------------
+  public: the information visible to the other users (for profile viewing)
+  private: information for only accessible and available to the users (not shared with other users)
+
+  Validate: // ensures that a user_private_info and user_public_info
+            // are only updated when the other one exists.
+
+  Json
+  -----
+  Private Write Example:
+  {
+    "uid": "iLJPvynOc8YO69sz1R68ccnnbvI3",
+    "display_name": "String",0
+    "birthday": {
+                  "day": "Any",
+                  "month": "Any",
+                  "year": 1991,
+                  "age": 26
+                },
+    "email": "String",
+    "verified": "Any",
+    "first_name": "String",
+    "last_name": "String",
+    "photo_url": "String",
+    "language": "String",
+    "rating_average": "Any",
+    "password": "Any",
+    "device_token": "Any",
+
+    "order_requestor_count": 0,
+    "order_worker_count": 0,
+    "gps_coordinate": "Any",
+    "address":  {
+                  "unit": 22.50,
+                  "street_address": "Any",
+                  "city": "String",
+                  "postal_code": "Any",
+                  "province": "String",
+                  "country": "String"
+                },
+    "phone_number": 9058040781,
+    "email_verified": "String"
+    }
+
+    Public  Write Example:
+    {
+      "uid": "iLJPvynOc8YO69sz1R68ccnnbvI3",
+      "display_name": "String",
+      "birthday": {
+                    "day": "Any",
+                    "month": "Any",
+                    "year": 1991,
+                    "age": 26
+                  },
+      "email": "String",
+      "verified": "Any",
+      "first_name": "String",
+      "last_name": "String",
+      "photo_url": "String",
+      "language": "String",
+      "rating_average": "Any"
+      }
+
+*/
+
+  path /user_private_info/{uid} is UserPrivate {
+      read() { isCurrentUser(uid)}
+      write() { isCurrentUser(uid)}
+      validate() { root.user_public_info[uid] != null }
+  }
+  path /user_public_info/{uid} is UserPublic {
+      read() { isUserSignedIn() }
+      write() { isCurrentUser(uid)}
+      validate() { root.user_private_info[uid] != null }
+  }
+
+  path /user_chat/{uid} is UserChat {
+      read() {isCurrentUser(uid)}
+      write() { isCurrentUser(uid)}
+  }
+
+
+  /*
+    ------------------------
+    Messages Path to Listings
+    ------------------------
+
+  */
+
+  path /chat/{chat_id} is Chat{
+    write() { isCurrentUser(this.uid)}
+    read() { isCurrentUser(this.uid)}
+  }
+
+  path /message/{message_id} is Message{
+    write() { isCurrentUser(this.uid)}
+    read() { isCurrentUser(this.uid)}
+  }
+
+
+/*
+  ------------------------
+  Databse Path to Listings
+  ------------------------
+  acitve: the listings are still active and viewable (workers can still bid)
+  not_active: the listing is no longer active
+
+  listing_preview: the partial data needed to display listing (in cards or whatever)
+  listing_request_details: the full data for the listing
+
+
+
+
+*/
+
+  path /listing/not_active/{listing_id}/listing_preview is Listing{
+    read() { false }
+    write() { false }
+  }
+  path /listing/not_active/{listing_id}/listing_request_details is Listing_Request_Details{
+    read() { false }
+    write() { false }
+  }
+  path /listing/active/{listing_id}/listing_preview is Listing{
+    read() { true }
+    write() { isCurrentUser(this.uid)}
+  }
+  path /listing/active/{listing_id}/listing_request_details is Listing_Request_Details{
+    read() { true }
+    write() { isCurrentUser(this.uid)}
+  }
+
+  for(userId in thread.users) {
+	var userPath = "users/" + userId
+	var user = Firebase.get(userPath)
+	print(user.name)
+}
+
+
+  /*
+    ------------------------
+    Databse Path to Category
+    ------------------------
+    acitve: the listings are still active and viewable (workers can still bid)
+    not_active: the listing is no longer active
+
+    listing_preview: the partial data needed to display listing (in cards or whatever)
+    listing_request_details: the full data for the listing
+  */
+
+  path /category/{category_id} is Category{
+    read() { true }
+    //Later we should make this only writeable by admin
+    write() { true }
+  }
+
+  path /subcategory/{subcategory_id} is Subcategory{
+    read() { true }
+    //Later we should make this only writeable by admin
+    write() { true }
+  }
+
+  path /subcategory_listing/{listing_id}{
+    read() {true}
+    write() { prior(this) != null }
+  }
+
+  path /category_listing/{listing_id}{
+    read() {true}
+    write() { prior(this) != null }
+  }
+
+
+
+  //01/12/2018
+type GenericUser {
+    uid : Number,
+    first_name : String,
+    last_name : String,
+    profile_picture : String | Null,
+    dateOfBirth : String,
+    chat_thread : Any | Null
+}
+
+type ChatThreads {
+    uid : Number,
+    details : Object,
+    messages : Object,
+    Users : Object
+}
+
+type Requester {
+    rating : Number,
+    posts : Object,
+    verified : Boolean,
+    transaction_history : Object, //Collection of transaction IDs
+}
+
+type Jobber {
+    rating : Number,
+    verified : Boolean,
+    transaction_history : Object, //Collection of transaction IDs
+}
+
+type Jobs {
+    jobID : Number,
+    job_status : String //Open, Assigned, Completed and Unfulfilled
+    job_offerID : Number
+}
+
+type PublicListings {
+    listing_id : Number,
+    title : String,
+    photo_url : String,
+    description : String,
+    user_id : Number,
+    price : Number,
+    category : String,
+    category_id : Number,
+    timestamp : String,
+    location : String,
+    equipment : Number,
+    preferred_date : String,
+    preferred_time : String,
+    other_details : String,
+    gps_coords : String,
+    phone_number : String,
+    address : String
+}
+
+type Categories {
+	category_ID : Number,
+	category_name : String,
+	category_picture : String,
+	category_description : String,
+	subcategory_IDs: Object, //Collection
+	//skilled : Number
+}
+
+type Job_Offers {
+    question_text : String,
+    listing_ID : Number,
+    offer_ID : Number,
+    requester_ID : Number,
+    jobber_ID : Number,
+    job_price : String,
+    job_date : String,
+    job_time : String,
+    offer_type : Number
+}
+
+type Transactions {
+	transaction_ID : Number,
+	transaction_Date : String,
+	transaction_Time : String,
+	transaction_Amount : String, //Figure this shit out later.
+	jobber_ID : Number,
+	requester_ID : Number
+}
+
+type Payout {
+    transaction_ID : Number,
+    payout_amount : Number,
+    email : String
+    jobber_ID : Number
+
+}
+
+type UserPublic {
+  uid: Any,
+  display_name: String,
+  birthday: Birthday,
+  email: String,
+  verified: Any,
+  first_name: String,
+  last_name: String,
+  photo_url: String | Null,
+  language: String,
+  rating_average: Any | Null
+}
+
+type UserPrivate extends UserPublic{
+  password: Any,
+  device_token: Any,
+  meta_data: Object | Null,
+  provider_Data: Object | Null,
+  order_requestor_count: Number,
+  order_worker_count: Number,
+  gps_coordinate: Any | Null,
+  address: Address | Null,
+  phone_number: Number,
+  email_verified: String,
+}
+
+type Listing {
+  listing_id: Any,
+  title: Any,
+  photo_header_url: Any,
+  description : Any,
+  uid: Userid,
+  price: Number,
+  category_name: Any,
+  category_id: Any,
+  Category: Any | Null,
+  Subcategory: Any| Null,
+}
+
+type Listing_Request_Details extends Listing{
+  date_posted: Any,
+  time_posted: Any,
+  photos: Any,
+  location: Any
+}
+
+type Category {
+  category_id: Any,
+  category_name: String,
+  category_picture: Any,
+  category_description: Any,
+  subcategory: Subcategory | Null,
+  maximum_price: Number| Null,
+  minimum_price: Number| Null
+
+}
+
+type Subcategory{
+  subcategory_id: Any,
+  subcategory_name: String,
+  subcategory_picture: Any,
+  subcategory_description: Any,
+  maximum_price: Number| Null,
+  minimum_price: Number| Null
+
+}
+
+
+type Address{
+  unit: Number| Null,
+  street_address: Any | Null,
+  city: String | Null,
+  postal_code: Any | Null,
+  province: String | Null,
+  country: String| Null
+}
+
+type Birthday{
+  day: Any,
+  month: Any,
+  year: Number,
+  age: Number
+}
+
+type Chat{
+  chat_id: Any,
+  uid: ChatUserId,
+  messages: Message
+}
+
+type Message{
+  message_id: Any,
+  to_uid: Userid,
+  from_uid: Userid,
+  message: Any,
+  timestamp: Any
+}
+
+type UserChat{
+  uid: Userid,
+  chat_id: Any
+}
+
+type ChatUserId{
+  uid: Userid
+}
+
+type Userid {
+   validate() { return userExists(this); }
+}
+
+// Define isCurrentUser() function to test if the given user id
+// matches the currently signed-in user.
+isCurrentUser(uid) { auth != null && auth.uid == uid }
+isUserSignedIn() { auth != null}
+userExists(userid) { root.user.private[userid] != null }
+dataDoesNotExist() { prior(this) != null }

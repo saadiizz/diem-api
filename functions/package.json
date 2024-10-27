@@ -1,0 +1,35 @@
+{
+  "name": "functions",
+  "description": "Cloud Functions for Firebase",
+  "dependencies": {
+    "@google-cloud/storage": "^5.16.1",
+    "child-process-promise": "^2.2.1",
+    "customerio-node": "^3.1.0",
+    "firebase-admin": "^10.0.1",
+    "firebase-functions": "^3.16.0",
+    "moment": "^2.29.1",
+    "moment-timezone": "^0.5.34",
+    "node-schedule": "^2.1.0",
+    "nodemailer": "^6.7.2",
+    "request": "^2.88.2",
+    "request-promise": "^4.2.6",
+    "underscore": "^1.13.2",
+    "xoauth2": "^1.2.0"
+  },
+  "devDependencies": {
+    "eslint": "^4.13.1",
+    "eslint-plugin-promise": "^3.6.0"
+  },
+  "scripts": {
+    "lint": "./node_modules/.bin/eslint .",
+    "serve": "firebase serve --only functions",
+    "shell": "firebase experimental:functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log"
+  },
+  "engines": {
+    "node": "16"
+  },
+  "private": true
+}

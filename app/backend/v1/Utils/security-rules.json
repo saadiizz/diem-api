@@ -1,0 +1,523 @@
+{
+  "rules": {
+    "user_private_info": {
+      "$uid": {
+        ".validate": "newData.hasChildren(['uid', 'display_name', 'birthday', 'email', 'verified', 'first_name', 'last_name', 'language', 'password', 'device_token', 'order_requestor_count', 'order_worker_count', 'phone_number', 'email_verified']) && newData.parent().parent().child('user_public_info').child($uid).val() != null",
+        "uid": {
+          ".validate": "true"
+        },
+        "display_name": {
+          ".validate": "newData.isString()"
+        },
+        "birthday": {
+          ".validate": "newData.hasChildren(['day', 'month', 'year', 'age'])",
+          "day": {
+            ".validate": "true"
+          },
+          "month": {
+            ".validate": "true"
+          },
+          "year": {
+            ".validate": "newData.isNumber()"
+          },
+          "age": {
+            ".validate": "newData.isNumber()"
+          },
+          "$other": {
+            ".validate": "false"
+          }
+        },
+        "email": {
+          ".validate": "newData.isString()"
+        },
+        "verified": {
+          ".validate": "true"
+        },
+        "first_name": {
+          ".validate": "newData.isString()"
+        },
+        "last_name": {
+          ".validate": "newData.isString()"
+        },
+        "photo_url": {
+          ".validate": "newData.isString()"
+        },
+        "language": {
+          ".validate": "newData.isString()"
+        },
+        "rating_average": {
+          ".validate": "true"
+        },
+        "$other": {
+          ".validate": "false"
+        },
+        "password": {
+          ".validate": "true"
+        },
+        "device_token": {
+          ".validate": "true"
+        },
+        "meta_data": {
+          ".validate": "newData.hasChildren()"
+        },
+        "provider_Data": {
+          ".validate": "newData.hasChildren()"
+        },
+        "order_requestor_count": {
+          ".validate": "newData.isNumber()"
+        },
+        "order_worker_count": {
+          ".validate": "newData.isNumber()"
+        },
+        "gps_coordinate": {
+          ".validate": "true"
+        },
+        "address": {
+          ".validate": "newData.hasChildren()",
+          "unit": {
+            ".validate": "newData.isNumber()"
+          },
+          "street_address": {
+            ".validate": "true"
+          },
+          "city": {
+            ".validate": "newData.isString()"
+          },
+          "postal_code": {
+            ".validate": "true"
+          },
+          "province": {
+            ".validate": "newData.isString()"
+          },
+          "country": {
+            ".validate": "newData.isString()"
+          },
+          "$other": {
+            ".validate": "false"
+          }
+        },
+        "phone_number": {
+          ".validate": "newData.isNumber()"
+        },
+        "email_verified": {
+          ".validate": "newData.isString()"
+        },
+        ".read": "auth != null && auth.uid == $uid",
+        ".write": "auth != null && auth.uid == $uid"
+      }
+    },
+    "user_public_info": {
+      "$uid": {
+        ".validate": "newData.hasChildren(['uid', 'display_name', 'birthday', 'email', 'verified', 'first_name', 'last_name', 'language']) && newData.parent().parent().child('user_private_info').child($uid).val() != null",
+        "uid": {
+          ".validate": "true"
+        },
+        "display_name": {
+          ".validate": "newData.isString()"
+        },
+        "birthday": {
+          ".validate": "newData.hasChildren(['day', 'month', 'year', 'age'])",
+          "day": {
+            ".validate": "true"
+          },
+          "month": {
+            ".validate": "true"
+          },
+          "year": {
+            ".validate": "newData.isNumber()"
+          },
+          "age": {
+            ".validate": "newData.isNumber()"
+          },
+          "$other": {
+            ".validate": "false"
+          }
+        },
+        "email": {
+          ".validate": "newData.isString()"
+        },
+        "verified": {
+          ".validate": "true"
+        },
+        "first_name": {
+          ".validate": "newData.isString()"
+        },
+        "last_name": {
+          ".validate": "newData.isString()"
+        },
+        "photo_url": {
+          ".validate": "newData.isString()"
+        },
+        "language": {
+          ".validate": "newData.isString()"
+        },
+        "rating_average": {
+          ".validate": "true"
+        },
+        "$other": {
+          ".validate": "false"
+        },
+        ".read": "auth != null",
+        ".write": "auth != null && auth.uid == $uid"
+      }
+    },
+    "user_chat": {
+      "$uid": {
+        ".validate": "newData.hasChildren(['uid', 'chat_id'])",
+        "uid": {
+          ".validate": "newData.parent().parent().parent().child('user').child('private').child(newData.val()).val() != null"
+        },
+        "chat_id": {
+          ".validate": "true"
+        },
+        "$other": {
+          ".validate": "false"
+        },
+        ".read": "auth != null && auth.uid == $uid",
+        ".write": "auth != null && auth.uid == $uid"
+      }
+    },
+    "chat": {
+      "$chat_id": {
+        ".validate": "newData.hasChildren(['chat_id', 'uid', 'messages'])",
+        "chat_id": {
+          ".validate": "true"
+        },
+        "uid": {
+          ".validate": "newData.hasChildren(['uid'])",
+          "uid": {
+            ".validate": "newData.parent().parent().parent().parent().child('user').child('private').child(newData.val()).val() != null"
+          },
+          "$other": {
+            ".validate": "false"
+          }
+        },
+        "messages": {
+          ".validate": "newData.hasChildren(['message_id', 'uid', 'name', 'message', 'timestamp'])",
+          "message_id": {
+            ".validate": "true"
+          },
+          "uid": {
+            ".validate": "newData.parent().parent().parent().parent().child('user').child('private').child(newData.val()).val() != null"
+          },
+          "name": {
+            ".validate": "true"
+          },
+          "message": {
+            ".validate": "true"
+          },
+          "timestamp": {
+            ".validate": "true"
+          },
+          "$other": {
+            ".validate": "false"
+          }
+        },
+        "$other": {
+          ".validate": "false"
+        },
+        ".read": "auth != null && auth.uid == data.child('uid').val()",
+        ".write": "auth != null && auth.uid == newData.child('uid').val()"
+      }
+    },
+    "message": {
+      "$message_id": {
+        ".validate": "newData.hasChildren(['message_id', 'uid', 'name', 'message', 'timestamp'])",
+        "message_id": {
+          ".validate": "true"
+        },
+        "uid": {
+          ".validate": "newData.parent().parent().parent().child('user').child('private').child(newData.val()).val() != null"
+        },
+        "name": {
+          ".validate": "true"
+        },
+        "message": {
+          ".validate": "true"
+        },
+        "timestamp": {
+          ".validate": "true"
+        },
+        "$other": {
+          ".validate": "false"
+        },
+        ".read": "auth != null && auth.uid == data.child('uid').val()",
+        ".write": "auth != null && auth.uid == newData.child('uid').val()"
+      }
+    },
+    "listing": {
+      "not_active": {
+        "$listing_id": {
+          "listing_preview": {
+            ".validate": "newData.hasChildren(['listing_id', 'title', 'photo_header_url', 'description', 'uid', 'price', 'category_name', 'category_id'])",
+            "listing_id": {
+              ".validate": "true"
+            },
+            "title": {
+              ".validate": "true"
+            },
+            "photo_header_url": {
+              ".validate": "true"
+            },
+            "description": {
+              ".validate": "true"
+            },
+            "uid": {
+              ".validate": "newData.parent().parent().parent().parent().parent().child('user').child('private').child(newData.val()).val() != null"
+            },
+            "price": {
+              ".validate": "newData.isNumber()"
+            },
+            "category_name": {
+              ".validate": "true"
+            },
+            "category_id": {
+              ".validate": "true"
+            },
+            "Category": {
+              ".validate": "true"
+            },
+            "Subcategory": {
+              ".validate": "true"
+            },
+            "$other": {
+              ".validate": "false"
+            }
+          },
+          "listing_request_details": {
+            ".validate": "newData.hasChildren(['listing_id', 'title', 'photo_header_url', 'description', 'uid', 'price', 'category_name', 'category_id', 'date_posted', 'time_posted', 'photos', 'location'])",
+            "listing_id": {
+              ".validate": "true"
+            },
+            "title": {
+              ".validate": "true"
+            },
+            "photo_header_url": {
+              ".validate": "true"
+            },
+            "description": {
+              ".validate": "true"
+            },
+            "uid": {
+              ".validate": "newData.parent().parent().parent().parent().parent().child('user').child('private').child(newData.val()).val() != null"
+            },
+            "price": {
+              ".validate": "newData.isNumber()"
+            },
+            "category_name": {
+              ".validate": "true"
+            },
+            "category_id": {
+              ".validate": "true"
+            },
+            "Category": {
+              ".validate": "true"
+            },
+            "Subcategory": {
+              ".validate": "true"
+            },
+            "$other": {
+              ".validate": "false"
+            },
+            "date_posted": {
+              ".validate": "true"
+            },
+            "time_posted": {
+              ".validate": "true"
+            },
+            "photos": {
+              ".validate": "true"
+            },
+            "location": {
+              ".validate": "true"
+            }
+          }
+        }
+      },
+      "active": {
+        "$listing_id": {
+          "listing_preview": {
+            ".validate": "newData.hasChildren(['listing_id', 'title', 'photo_header_url', 'description', 'uid', 'price', 'category_name', 'category_id'])",
+            "listing_id": {
+              ".validate": "true"
+            },
+            "title": {
+              ".validate": "true"
+            },
+            "photo_header_url": {
+              ".validate": "true"
+            },
+            "description": {
+              ".validate": "true"
+            },
+            "uid": {
+              ".validate": "newData.parent().parent().parent().parent().parent().child('user').child('private').child(newData.val()).val() != null"
+            },
+            "price": {
+              ".validate": "newData.isNumber()"
+            },
+            "category_name": {
+              ".validate": "true"
+            },
+            "category_id": {
+              ".validate": "true"
+            },
+            "Category": {
+              ".validate": "true"
+            },
+            "Subcategory": {
+              ".validate": "true"
+            },
+            "$other": {
+              ".validate": "false"
+            },
+            ".read": "true",
+            ".write": "auth != null && auth.uid == newData.child('uid').val()"
+          },
+          "listing_request_details": {
+            ".validate": "newData.hasChildren(['listing_id', 'title', 'photo_header_url', 'description', 'uid', 'price', 'category_name', 'category_id', 'date_posted', 'time_posted', 'photos', 'location'])",
+            "listing_id": {
+              ".validate": "true"
+            },
+            "title": {
+              ".validate": "true"
+            },
+            "photo_header_url": {
+              ".validate": "true"
+            },
+            "description": {
+              ".validate": "true"
+            },
+            "uid": {
+              ".validate": "newData.parent().parent().parent().parent().parent().child('user').child('private').child(newData.val()).val() != null"
+            },
+            "price": {
+              ".validate": "newData.isNumber()"
+            },
+            "category_name": {
+              ".validate": "true"
+            },
+            "category_id": {
+              ".validate": "true"
+            },
+            "Category": {
+              ".validate": "true"
+            },
+            "Subcategory": {
+              ".validate": "true"
+            },
+            "$other": {
+              ".validate": "false"
+            },
+            "date_posted": {
+              ".validate": "true"
+            },
+            "time_posted": {
+              ".validate": "true"
+            },
+            "photos": {
+              ".validate": "true"
+            },
+            "location": {
+              ".validate": "true"
+            },
+            ".read": "true",
+            ".write": "auth != null && auth.uid == newData.child('uid').val()"
+          }
+        }
+      }
+    },
+    "category": {
+      "$category_id": {
+        ".validate": "newData.hasChildren(['category_id', 'category_name', 'category_picture', 'category_description'])",
+        "category_id": {
+          ".validate": "true"
+        },
+        "category_name": {
+          ".validate": "newData.isString()"
+        },
+        "category_picture": {
+          ".validate": "true"
+        },
+        "category_description": {
+          ".validate": "true"
+        },
+        "subcategory": {
+          ".validate": "newData.hasChildren() && newData.hasChildren(['subcategory_id', 'subcategory_name', 'subcategory_picture', 'subcategory_description'])",
+          "subcategory_id": {
+            ".validate": "true"
+          },
+          "subcategory_name": {
+            ".validate": "newData.isString()"
+          },
+          "subcategory_picture": {
+            ".validate": "true"
+          },
+          "subcategory_description": {
+            ".validate": "true"
+          },
+          "maximum_price": {
+            ".validate": "newData.isNumber()"
+          },
+          "minimum_price": {
+            ".validate": "newData.isNumber()"
+          },
+          "$other": {
+            ".validate": "false"
+          }
+        },
+        "maximum_price": {
+          ".validate": "newData.isNumber()"
+        },
+        "minimum_price": {
+          ".validate": "newData.isNumber()"
+        },
+        "$other": {
+          ".validate": "false"
+        },
+        ".read": "true",
+        ".write": "true"
+      }
+    },
+    "subcategory": {
+      "$subcategory_id": {
+        ".validate": "newData.hasChildren(['subcategory_id', 'subcategory_name', 'subcategory_picture', 'subcategory_description'])",
+        "subcategory_id": {
+          ".validate": "true"
+        },
+        "subcategory_name": {
+          ".validate": "newData.isString()"
+        },
+        "subcategory_picture": {
+          ".validate": "true"
+        },
+        "subcategory_description": {
+          ".validate": "true"
+        },
+        "maximum_price": {
+          ".validate": "newData.isNumber()"
+        },
+        "minimum_price": {
+          ".validate": "newData.isNumber()"
+        },
+        "$other": {
+          ".validate": "false"
+        },
+        ".read": "true",
+        ".write": "true"
+      }
+    },
+    "subcategory_listing": {
+      "$listing_id": {
+        ".read": "true",
+        ".write": "data.val() != null"
+      }
+    },
+    "category_listing": {
+      "$listing_id": {
+        ".read": "true",
+        ".write": "data.val() != null"
+      }
+    }
+  }
+}

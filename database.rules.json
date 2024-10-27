@@ -1,0 +1,88 @@
+{
+  "rules": {
+    "listing": {
+    ".read": true,
+    ".write": "auth != null && root.child('users').hasChild(auth.uid)"
+    },
+    "offers": {
+    ".read": true,
+    ".write": "auth != null && root.child('users').hasChild(auth.uid)"
+    },
+    "users": {
+    ".read": true,
+    ".write": true
+    },
+    "public_profile": {
+    ".read": "auth != null",
+    ".write": "auth != null"
+    },
+    "online": {
+      ".read": "auth != null",
+      ".write": "auth != null"
+    },
+    "active": {
+      ".read": "auth != null",
+      ".write": "auth != null"
+    },
+    "requestors": {
+      ".read": "auth != null",
+      ".write": "auth != null"
+    },
+    "jobbers": {
+      ".read": "auth != null",
+      ".write": "auth != null"
+    },
+    "category": {
+      ".read": "auth != null",
+      ".write": "auth != null"
+    },
+    "sub_category": {
+      ".read": "auth != null",
+      ".write": "auth != null"
+    },
+    "listingLocation": {
+      ".read": "auth != null",
+      ".write": "auth != null && root.child('users').hasChild(auth.uid)"
+    },
+    "jobber_completed_offer": {
+      ".read": "auth != null",
+      ".write": "auth != null && root.child('users').hasChild(auth.uid)"
+    },
+    "completed_offer": {
+      ".read": "auth != null",
+      ".write": "auth != null && root.child('users').hasChild(auth.uid)"
+    },
+     "cancelled_listing": {
+      ".read": "auth != null",
+      ".write": "auth != null && root.child('users').hasChild(auth.uid)"
+    },
+    "accepted_offer": {
+      ".read": "auth != null",
+      ".write": "auth != null && root.child('users').hasChild(auth.uid)"
+    },
+    "listingByCategory": {
+      ".read": "auth != null",
+      ".write": "auth != null"
+    },
+    "searchIndex": {
+      ".read": "auth != null",
+      ".write": "auth != null"
+    },
+    "listingRecentlyCompleted": {
+      ".read": "auth != null",
+      ".write": "auth != null"
+    },
+    "disputed_offer": {
+      ".read": "auth != null",
+      ".write": "auth != null && root.child('users').hasChild(auth.uid)"
+    },
+    "checkout_payment": {
+      ".read": "auth != null",
+      ".write": "auth != null && root.child('users').hasChild(auth.uid)"
+    },
+    "listingReported": {
+      ".read": "auth != null",
+      ".write": "auth != null && root.child('users').hasChild(auth.uid)"
+    }
+  }
+}
